@@ -433,29 +433,29 @@ bool LaserScanMatcher::processScan(LDP& curr_ldp_scan, const rclcpp::Time& time)
   if (publish_odom_)
   {
     // stamped Pose message
-    nav_msgs::msg::Odometry odom_msg;
+    nav_msgs::msg::Odometry odom;
 
-    odom_msg.header.stamp    = time;
-    odom_msg.header.frame_id = odom_frame_;
-    odom_msg.child_frame_id = base_frame_;
-    odom_msg.pose.pose.position.x = f2b_.getOrigin().x();
-    odom_msg.pose.pose.position.y = f2b_.getOrigin().y();
-    odom_msg.pose.pose.position.z = f2b_.getOrigin().z();
+    odom.header.stamp    = time;
+    odom.header.frame_id = example;
+    odom.child_frame_id = base_frame_;
+    odom.pose.pose.position.x = f2b_.getOrigin().x();
+    odom.pose.pose.position.y = f2b_.getOrigin().y();
+    odom.pose.pose.position.z = f2b_.getOrigin().z();
 
-    odom_msg.pose.pose.orientation.x = f2b_.getRotation().x();
-    odom_msg.pose.pose.orientation.y = f2b_.getRotation().y();
-    odom_msg.pose.pose.orientation.z = f2b_.getRotation().z();
-    odom_msg.pose.pose.orientation.w = f2b_.getRotation().w();
+    odom.pose.pose.orientation.x = f2b_.getRotation().x();
+    odom.pose.pose.orientation.y = f2b_.getRotation().y();
+    odom.pose.pose.orientation.z = f2b_.getRotation().z();
+    odom.pose.pose.orientation.w = f2b_.getRotation().w();
 
     // Get pose difference in base frame and calculate velocities
     auto pose_difference = prev_f2b_.inverse() * f2b_;
-    odom_msg.twist.twist.linear.x = pose_difference.getOrigin().getX()/dt;
-    odom_msg.twist.twist.linear.y = pose_difference.getOrigin().getY()/dt;
-    odom_msg.twist.twist.angular.z = tf2::getYaw(pose_difference.getRotation())/dt;
+    odom.twist.twist.linear.x = pose_difference.getOrigin().getX()/dt;
+    odom.twist.twist.linear.y = pose_difference.getOrigin().getY()/dt;
+    odom.twist.twist.angular.z = tf2::getYaw(pose_difference.getRotation())/dt;
 
     prev_f2b_ = f2b_;
 
-    odom_publisher_->publish(odom_msg);
+    odom_publisher_->publish(odom);
   }
 
   
